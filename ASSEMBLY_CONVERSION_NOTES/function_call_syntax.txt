@@ -1,0 +1,39 @@
+ret = funcion_name(ap1, ap2, ...., apn); 
+
+Assumptions: 
+    1) all actual parameters from ap1 to apn are four bytes long. 
+    2) ret is a global variable in data or bss section. 
+
+
+According to C calling convention: the caller must perform the following duties: 
+
+1) Caller should push all actual parameters on stack in the reverse order. 
+    i.e. 
+    push apn    on stack 
+    push apn-1  on stack 
+    push apn-2  on stack 
+    .
+    .
+    .
+    push ap2    on stack 
+    push ap1    on stack 
+
+2)  call the function itself. 
+
+3)  On returning from the function, clear the storage allocated on stack 
+    for actual parameters before the function call was made 
+
+4)  If the function returns the value, and the caller is interested in it, 
+    take the value from the eax register. 
+
+# Assembly 
+
+pushl   apn 
+pushl   apn-1 
+.
+.
+pushl   ap2 
+pushl   ap1 
+call    function_name 
+addl    $4*n, %esp 
+movl    %eax, ret 
